@@ -23,7 +23,7 @@ namespace nirtothunder
             GUI.backgroundColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);
 
             EditorGUILayout.Space();
-            EditorGUILayout.HelpBox("Настройки музыкального плеера для ангара", MessageType.None, true);
+            EditorGUILayout.HelpBox("Настройки музыки в ангаре", MessageType.None, true);
             
             EditorGUILayout.PropertyField(Audio_ClipsProp, new GUIContent("Аудио клипы"), true);
             EditorGUILayout.PropertyField(Delay_RangeProp, new GUIContent("Диапазон задержки"));
