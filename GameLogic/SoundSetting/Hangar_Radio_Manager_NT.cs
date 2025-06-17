@@ -8,29 +8,40 @@ namespace nirtothunder
         public Hangar_Music_Player_NT Hangar_Music_Player;
         public AudioSource Radio_Music_Source;
         public float Fade_Duration = 1.0f;
-        public KeyCode Activation_Key = KeyCode.R;
+        public float Hangar_Music_Delay = 20.0f; // Задержка перед включением музыки ангара
 
         private bool is_Radio_Active = false;
+        private Coroutine currentFadeCoroutine;
+        private Coroutine delayedMusicCoroutine;
 
-        void Update()
+        void OnMouseDown()
         {
-            if (Input.GetKeyDown(Activation_Key))
-            {
-                ToggleRadio();
-            }
+            ToggleRadio();
         }
 
         public void ToggleRadio()
         {
+            if (currentFadeCoroutine != null)
+            {
+                StopCoroutine(currentFadeCoroutine);
+            }
+
+            if (delayedMusicCoroutine != null)
+            {
+                StopCoroutine(delayedMusicCoroutine);
+                delayedMusicCoroutine = null;
+            }
+
             is_Radio_Active = !is_Radio_Active;
 
             if (is_Radio_Active)
             {
-                StartCoroutine(SwitchToRadioMusic());
+                currentFadeCoroutine = StartCoroutine(SwitchToRadioMusic());
             }
             else
             {
-                StartCoroutine(SwitchToHangarMusic());
+                currentFadeCoroutine = StartCoroutine(StopRadioMusic());
+                delayedMusicCoroutine = StartCoroutine(DelayedHangarMusicStart());
             }
         }
 
@@ -60,7 +71,7 @@ namespace nirtothunder
             }
         }
 
-        IEnumerator SwitchToHangarMusic()
+        IEnumerator StopRadioMusic()
         {
             float start_Volume = Radio_Music_Source.volume;
             float timer = 0f;
@@ -73,11 +84,16 @@ namespace nirtothunder
             }
 
             Radio_Music_Source.Stop();
+        }
+
+        IEnumerator DelayedHangarMusicStart()
+        {
+            yield return new WaitForSeconds(Hangar_Music_Delay);
             
             Hangar_Music_Player.audio_Source.volume = 0f;
             Hangar_Music_Player.Start_Audio_Playback();
             
-            timer = 0f;
+            float timer = 0f;
             while (timer < Fade_Duration)
             {
                 timer += Time.deltaTime;
