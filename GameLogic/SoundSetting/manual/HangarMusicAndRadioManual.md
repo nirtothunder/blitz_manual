@@ -78,7 +78,6 @@
 
 1. **Кнопка радио в интерфейсе**:
    ```csharp
-   // Для UI кнопки создайте отдельный скрипт:
    public class RadioButtonUI : MonoBehaviour
    {
        public Hangar_Radio_Manager_NT radioManager;
@@ -92,7 +91,6 @@
 
 2. **Изменение задержки в runtime**:
    ```csharp
-   // Где-то в вашем коде:
    GetComponent<Hangar_Radio_Manager_NT>().Hangar_Music_Delay = 30f;
    ```
 
